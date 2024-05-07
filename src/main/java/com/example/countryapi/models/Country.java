@@ -5,10 +5,10 @@ import lombok.Data;
 
 @Data
 public class Country {
-    public String name;
-    public String capital;
-    public String iso2;
-    public double population;
-    public double pop_growth;
-    public Currency currency;
+    private String name;
+    private String capital;
+    private String iso2;
+    private double population;
+    private double pop_growth;
+    private Currency currency;
 }
