@@ -2,7 +2,6 @@ package com.example.countryapi.repository;
 
 import com.example.countryapi.models.Country;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,16 +12,10 @@ public class CountryRepository {
     @Value("${config.countryInfoAPI}")
     private String CountryAPI;
 
-    @Value("${secrets.ninjasAPIKey}")
-    private String APIKey;
+    private final RestTemplate restTemplate;
 
-    RestTemplate restTemplate;
-
-    public CountryRepository() {
-        restTemplate = new RestTemplateBuilder(rt -> rt.getInterceptors().add((request, body, execution) -> {
-            request.getHeaders().add("X-Api-Key", APIKey);
-            return execution.execute(request, body);
-        })).build();
+    public CountryRepository(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     public Optional<Country> getCountryByName(final String name) {
