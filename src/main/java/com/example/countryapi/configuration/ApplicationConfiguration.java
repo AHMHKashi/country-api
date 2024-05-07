@@ -12,10 +12,15 @@ public class ApplicationConfiguration {
     private String APIKey;
 
     @Bean
-    public RestTemplate restTemplate() {
+    public RestTemplate ninjasRestTemplate() {
         return new RestTemplateBuilder(rt -> rt.getInterceptors().add((request, body, execution) -> {
             request.getHeaders().add("X-Api-Key", APIKey);
             return execution.execute(request, body);
         })).build();
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 }

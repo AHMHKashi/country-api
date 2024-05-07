@@ -1,6 +1,7 @@
 package com.example.countryapi.controllers;
 
 import com.example.countryapi.models.Country;
+import com.example.countryapi.models.dto.CountryListDto;
 import com.example.countryapi.services.CountryInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,13 +21,18 @@ public class CountryInfoController {
         this.countryInfoService = countryInfoService;
     }
 
+    @GetMapping("")
+    public CountryListDto getAllCountries() {
+        return countryInfoService.getCountriesInfoList();
+    }
+
     @GetMapping("/{name}")
     public Country getCountryInfo(@PathVariable("name") String name) {
         var country = countryInfoService.getCountryInfoByName(name);
         if (country.isPresent()) {
             return country.get();
-        }else{
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "there is no country with this name");
         }
-     }
+    }
 }
