@@ -6,6 +6,7 @@ import com.example.countryapi.models.dto.CountryListDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,6 +29,7 @@ public class CountryRepository {
         this.ninjasTemplate = ninjasTemplate;
     }
 
+    @Cacheable(value = "countryInfos", key = "#name")
     public Optional<Country> getCountryByName(final String name) {
         var result = ninjasTemplate.getForObject(CountryAPI + "?name=" + name, Country[].class);
         if (result != null && result.length > 0) {
@@ -37,6 +39,7 @@ public class CountryRepository {
         }
     }
 
+    @Cacheable(value = "countriesList")
     public CountryListDto.CountryName[] getCountriesList() {
         var url = CountriesListAPI + "/info?returns=name";
         var result = restTemplate.getForObject(url, CountriesListApiResponseDto.class);
