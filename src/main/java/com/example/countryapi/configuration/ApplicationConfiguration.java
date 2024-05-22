@@ -1,6 +1,7 @@
 package com.example.countryapi.configuration;
 
 import com.example.countryapi.repository.UserRepository;
+import com.example.countryapi.services.UserInfoDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -39,10 +40,15 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    public UserInfoDetailService userDetailsService() {
+        return new UserInfoDetailService(userRepository);
     }
+
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        return username -> userRepository.findByUsername(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//    }
 
 
     @Bean

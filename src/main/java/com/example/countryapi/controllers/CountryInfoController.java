@@ -5,6 +5,7 @@ import com.example.countryapi.models.dto.WeatherDto;
 import com.example.countryapi.models.dto.CountryListDto;
 import com.example.countryapi.services.CountryInfoService;
 import com.example.countryapi.services.WeatherInfoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,16 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/countries")
 public class CountryInfoController {
     private final CountryInfoService countryInfoService;
     private final WeatherInfoService weatherInfoService;
-
-    @Autowired
-    public CountryInfoController(CountryInfoService countryInfoService, WeatherInfoService weatherInfoService) {
-        this.countryInfoService = countryInfoService;
-        this.weatherInfoService = weatherInfoService;
-    }
 
     @GetMapping("")
     public CountryListDto getAllCountries() {

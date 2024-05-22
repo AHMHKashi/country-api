@@ -3,6 +3,7 @@ package com.example.countryapi.controllers;
 import com.example.countryapi.models.dto.AuthenticationResponse;
 import com.example.countryapi.models.dto.RegisterRequestDto;
 import com.example.countryapi.models.UserInfo;
+import com.example.countryapi.models.dto.MessageResponse;
 import com.example.countryapi.repository.UserRepository;
 import com.example.countryapi.services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class UserController {
 
 
     @PostMapping("/register")
-    public @ResponseBody ResponseEntity<AuthenticationResponse> registerUser (@RequestBody RegisterRequestDto registerForm) {
+    public ResponseEntity<MessageResponse> registerUser (@RequestBody RegisterRequestDto registerForm) {
         return ResponseEntity.ok(authService.register(registerForm));
     }
 
