@@ -10,13 +10,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -48,14 +50,44 @@ public class LoginIntegrationTest {
     }
 
     @Test
-    void loginWorksThroughAllLayers() throws Exception {
-/*        RegisterRequestDto incorrectReq = new RegisterRequestDto("Test", "incorrect");
+    void loginWithWrongUsername() throws Exception {
+        RegisterRequestDto correctReq = new RegisterRequestDto("Test0", "1234");
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(incorrectReq)))
-                .andExpect(status().isForbidden());*/
+                        .content(objectMapper.writeValueAsString(correctReq)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void loginWithWrongPassword() throws Exception {
+        RegisterRequestDto correctReq = new RegisterRequestDto("Test", "incorrect");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(correctReq)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void loginWithInactiveUser() throws Exception {
+        RegisterRequestDto correctReq = new RegisterRequestDto("Test", "1234");
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(correctReq)))
+                .andExpect(status().isNotAcceptable());
+    }
+
+    @Test
+    @Transactional
+    void loginCorrectly() throws Exception {
+        var userInfo = userRepository.findByUsername("Test");
+        userInfo.get().setActive(true);
+        userRepository.save(userInfo.get());
 
         RegisterRequestDto correctReq = new RegisterRequestDto("Test", "1234");
 
