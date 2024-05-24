@@ -3,9 +3,7 @@ package com.example.countryapi.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.relational.core.sql.In;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Setter
@@ -23,7 +21,7 @@ public class Token {
     private String name;
     private Date expireDate;
     private String token;
-    @ManyToOne(cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="User_info_id")
     private UserInfo userInfo;
 }

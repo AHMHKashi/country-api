@@ -18,12 +18,12 @@ public class CountryInfoService {
         this.countryRepository = countryRepository;
     }
 
-    public Optional<Country> getCountryInfoByName(String name){
+    public Optional<Country> getCountryInfoByName(String name) {
         var country = countryRepository.getCountryByName(name);
         return country;
     }
 
-    public CountryListDto getCountriesInfoList(){
+    public CountryListDto getCountriesInfoList() {
         var countries = Arrays.stream(countryRepository.getCountriesList()).toList();
         return new CountryListDto(countries);
     }

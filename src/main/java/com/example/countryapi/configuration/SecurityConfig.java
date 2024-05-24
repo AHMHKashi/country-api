@@ -35,35 +35,9 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
 
-//    @Bean
-//    public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-//
-//        UserDetails admin = User.withUsername("mohsen")
-//                .password(encoder.encode("123"))
-//                .roles("ADMIN", "USER")
-//                .build();
-//
-//        UserDetails user = User.withUsername("abolfazl")
-//                .password(encoder.encode("123"))
-//                .roles("USER")
-//                .build();
-//
-//
-//        return new InMemoryUserDetailsManager(admin, user);
-//    }
-
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-//        http.csrf(AbstractHttpConfigurer::disable)
-//                .sessionManagement(
-//                        AbstractHttpConfigurer::disable)
-//                .authenticationProvider(authenticationProvider)
-//                .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-//                        .requestMatchers(HttpMethod.POST, "/users/*").permitAll().anyRequest().authenticated())
-//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-//        ;
 //
 
         http

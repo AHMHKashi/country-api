@@ -16,9 +16,5 @@ public class TokenResponse {
     private Date expireDate;
     private String token;
 
-//    {
-//        "name": "my-token-1",
-//            "expire_date": "2025-01-01T23:59:59Z",
-//            "token": "API ierkse325dfgawmd9hbwppp"
-//    }
+
 }

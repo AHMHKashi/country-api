@@ -51,22 +51,25 @@ public class TokenController {
         ServletRequestAttributes servletRequestAttributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
         if (servletRequestAttributes != null) {
             String tokenString = servletRequestAttributes.getRequest().getHeader("Authorization");
-            Optional<Token> token = tokenRepository.findByToken(tokenString);
+            Optional<Token> token = tokenRepository.findByToken(tokenString.substring(7));
+            System.out.println(tokenString);
             if (token.isPresent()) {
-                tokenRepository.delete(token.get());
+                for (Token to: tokenRepository.findAll()) System.out.println(to.getName() + " || " + to.getId());
+                tokenRepository.deleteById(token.get().getId());
+                for (Token to: tokenRepository.findAll()) System.out.println(to);
                 return DeleteTokenResponse.builder().deleted(true).build();
-            }
-        }
+            } else System.out.println("TOKEN COULDN'T BE FOUND");
+        } else System.out.println("SERVLET IS NULL!!");
         return DeleteTokenResponse.builder().deleted(false).build();
     }
 
-    @GetMapping("api-tokens")
+    @GetMapping("/api-tokens")
     public TokenResponseArray getTokens() {
         UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
         List<Token> tokens = tokenRepository.findTokensByUserInfo(userInfo.getId());
-        List<TokenResponse> tokenResponses= new ArrayList<>();
-        for(Token token : tokens) {
+        List<TokenResponse> tokenResponses = new ArrayList<>();
+        for (Token token : tokens) {
             TokenResponse tokenResponse = TokenResponse.builder()
                     .name(token.getName())
                     .expireDate(token.getExpireDate())

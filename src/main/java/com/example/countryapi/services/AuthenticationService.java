@@ -1,16 +1,22 @@
 package com.example.countryapi.services;
 
 import com.example.countryapi.models.Role;
+import com.example.countryapi.models.Token;
 import com.example.countryapi.models.UserInfo;
 import com.example.countryapi.models.dto.AuthenticationResponse;
 import com.example.countryapi.models.dto.RegisterRequestDto;
 import com.example.countryapi.models.dto.MessageResponse;
+import com.example.countryapi.repository.TokenRepository;
 import com.example.countryapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +25,8 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final TokenRepository tokenRepository;
+    private final UserRepository userRepository;
 
     public MessageResponse register(RegisterRequestDto registerForm) {
         var user = UserInfo.builder()
@@ -41,7 +49,15 @@ public class AuthenticationService {
         );
         var user = repository.findByUsername(request.getUsername())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        Date date = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
+        var jwtToken = jwtService.generateToken(user, date);
+        Token token = Token.builder()
+                .userInfo(user)
+                .token(jwtToken)
+                .expireDate(date)
+                .name("temp-token")
+                .build();
+        tokenRepository.save(token);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();

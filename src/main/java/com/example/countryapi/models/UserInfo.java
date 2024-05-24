@@ -22,7 +22,7 @@ public class UserInfo implements UserDetails {
     private Integer id;
     private String username;
     private String password;
-    private boolean isActive;
+    private boolean isActive = true;
     @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy="userInfo")

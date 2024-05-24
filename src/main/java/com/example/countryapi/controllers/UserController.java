@@ -18,12 +18,10 @@ public class UserController {
     private final AuthenticationService authService;
 
 
-
     @PostMapping("/register")
-    public ResponseEntity<MessageResponse> registerUser (@RequestBody RegisterRequestDto registerForm) {
+    public ResponseEntity<MessageResponse> registerUser(@RequestBody RegisterRequestDto registerForm) {
         return ResponseEntity.ok(authService.register(registerForm));
     }
-
 
 
     @PostMapping("/login")
@@ -31,9 +29,6 @@ public class UserController {
         return ResponseEntity.ok(authService.authenticate(registerForm));
     }
 
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<UserInfo> getAllUsers() {
-        return userRepository.findAll();
-    }
+
 }
 

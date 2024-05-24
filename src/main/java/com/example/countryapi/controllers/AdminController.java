@@ -3,11 +3,12 @@ package com.example.countryapi.controllers;
 
 import com.example.countryapi.models.UserInfo;
 import com.example.countryapi.models.dto.MessageResponse;
+import com.example.countryapi.models.dto.UserDto;
 import com.example.countryapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 
@@ -16,7 +17,6 @@ import java.util.Optional;
 @RequestMapping("/admin/users")
 public class AdminController {
     private final UserRepository userRepository;
-    //PUT /admin/users?username={username}&active={active(true/false)
 
     @PutMapping("")
     public MessageResponse setActiveUser(@RequestParam String username, @RequestParam boolean active) {
@@ -30,7 +30,19 @@ public class AdminController {
     }
 
     @GetMapping("")
-    public Iterable<UserInfo> getUsers() {
-        return (userRepository.findAll());
+    public ArrayList<UserDto> getUsers() {
+        ArrayList<UserDto> userList = new ArrayList<>();
+        for (UserInfo userInfo : userRepository.findAll()) {
+            userList.add(
+              UserDto.builder()
+                      .id(userInfo.getId())
+                      .username(userInfo.getUsername())
+                      .password(userInfo.getPassword())
+                      .role(userInfo.getRole())
+                      .isActive(userInfo.isActive())
+                      .build()
+            );
+        }
+        return (userList);
     }
 }

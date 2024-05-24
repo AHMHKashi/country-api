@@ -15,6 +15,7 @@ public class CommandLineAppStartupRunner implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     @Override
     public void run(String...args) throws Exception {
+        if (userRepository.findByUsername("mohsen").isPresent()) return;
         UserInfo admin = UserInfo.builder()
                 .username("mohsen")
                 .password(passwordEncoder.encode("123456"))

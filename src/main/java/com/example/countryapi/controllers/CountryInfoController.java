@@ -6,7 +6,6 @@ import com.example.countryapi.models.dto.CountryListDto;
 import com.example.countryapi.services.CountryInfoService;
 import com.example.countryapi.services.WeatherInfoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,17 +33,17 @@ public class CountryInfoController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "there is no country with this name");
         }
-     }
+    }
 
-     @GetMapping("/{name}/weather")
-     public WeatherDto getWeatherInfo(@PathVariable("name") String name) {
-         var weatherDto = weatherInfoService.getWeatherInfoByCountryName(name);
-         if (weatherDto.isPresent()) {
-             return weatherDto.get();
-         } else {
-             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "there is no country with this name");
-         }
-     }
+    @GetMapping("/{name}/weather")
+    public WeatherDto getWeatherInfo(@PathVariable("name") String name) {
+        var weatherDto = weatherInfoService.getWeatherInfoByCountryName(name);
+        if (weatherDto.isPresent()) {
+            return weatherDto.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "there is no country with this name");
+        }
+    }
 
 
 }
