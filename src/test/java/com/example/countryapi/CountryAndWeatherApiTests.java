@@ -66,4 +66,19 @@ class CountryAndWeatherApiTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("Iran, Islamic Republic Of")));
     }
+
+    @Test
+    void getCountryListTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/countries"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void getWeatherInfoTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/countries/iran/weather"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.capital", is("Tehran")));
+    }
 }
