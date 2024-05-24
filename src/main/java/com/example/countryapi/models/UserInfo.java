@@ -25,7 +25,7 @@ public class UserInfo implements UserDetails {
     private boolean isActive = true;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy="userInfo")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true, mappedBy="userInfo")
     private List<Token> tokens = new ArrayList<>();
 
     @Override

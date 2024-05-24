@@ -45,5 +45,12 @@ public class UserSystemIntegrationTest {
 
         var getUser = userRepository.findByUsername("Test");
         assertTrue(getUser.isPresent());
+
+        // repeated username
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isNotAcceptable());
     }
 }
