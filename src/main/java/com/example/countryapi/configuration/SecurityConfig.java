@@ -1,5 +1,6 @@
 package com.example.countryapi.configuration;
 
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,14 +28,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-//
+
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("users/**")
                                 .permitAll()
-                                .requestMatchers("/admin/**").hasAuthority(ADMIN.name())
+                                .requestMatchers("/admin/**")
+                                .hasAuthority(ADMIN.name())
+                                .dispatcherTypeMatchers(DispatcherType.ERROR)
+                                .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
