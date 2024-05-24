@@ -27,7 +27,6 @@ import java.util.Optional;
 public class TokenController {
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
-    private final UserRepository userRepository;
 
 
 
