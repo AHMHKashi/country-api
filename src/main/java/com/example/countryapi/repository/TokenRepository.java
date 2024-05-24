@@ -19,5 +19,4 @@ public interface TokenRepository extends CrudRepository<Token, Integer> {
     @Query("SELECT token FROM Token token WHERE token.userInfo.id = :userInfoId AND token.name = :tokenName")
     List<Token> findTokensByUserInfoAndName(@Param("userInfoId") Integer userInfoId, @Param("tokenName") String tokenName);
 
-
 }

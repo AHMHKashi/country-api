@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -49,14 +49,24 @@ public class AuthenticationService {
                 .orElseThrow();
         Date date = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
         var jwtToken = jwtService.generateToken(user, date);
-        Optional<Token> searchToken = tokenRepository.findByToken(request.getUsername());
-        searchToken.ifPresent(tokenRepository::delete);
-        Token token = Token.builder()
-                .userInfo(user)
-                .token(jwtToken)
-                .expireDate(date)
-                .name("temp-token")
-                .build();
+        List<Token> searchToken = tokenRepository.findTokensByUserInfoAndName(user.getId(), "temp-token");
+        Token token;
+        if (!searchToken.isEmpty()) {
+            token = Token.builder()
+                    .userInfo(user)
+                    .token(jwtToken)
+                    .expireDate(date)
+                    .name("temp-token")
+                    .id(searchToken.get(0).getId())
+                    .build();
+        } else {
+            token = Token.builder()
+                    .userInfo(user)
+                    .token(jwtToken)
+                    .expireDate(date)
+                    .name("temp-token")
+                    .build();
+        }
         tokenRepository.save(token);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
