@@ -1,6 +1,7 @@
 package com.example.countryapi.configuration;
 
 import com.example.countryapi.repository.UserRepository;
+import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +46,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers("users/**")
                                 .permitAll()
-                                .requestMatchers("/admin/**").hasAuthority(ADMIN.name())
+                                .requestMatchers("/admin/**")
+                                .hasAuthority(ADMIN.name())
+                                .dispatcherTypeMatchers(DispatcherType.ERROR)
+                                .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
