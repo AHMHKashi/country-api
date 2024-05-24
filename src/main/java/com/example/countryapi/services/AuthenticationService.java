@@ -29,16 +29,14 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
 
-    public MessageResponse register(RegisterRequestDto registerForm) {
+    public UserInfo register(RegisterRequestDto registerForm) {
         var user = UserInfo.builder()
                 .username(registerForm.getUsername())
                 .password(passwordEncoder.encode(registerForm.getPassword()))
                 .role(Role.USER)
                 .build();
         repository.save(user);
-        return MessageResponse.builder()
-                .message("User created successfully!")
-                .build();
+        return user;
     }
 
     public AuthenticationResponse authenticate(RegisterRequestDto request) {
