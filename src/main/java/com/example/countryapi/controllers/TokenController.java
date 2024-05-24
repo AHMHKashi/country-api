@@ -5,7 +5,6 @@ import com.example.countryapi.models.Token;
 import com.example.countryapi.models.UserInfo;
 import com.example.countryapi.models.dto.*;
 import com.example.countryapi.repository.TokenRepository;
-import com.example.countryapi.repository.UserRepository;
 import com.example.countryapi.services.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -60,14 +59,11 @@ public class TokenController {
         if (servletRequestAttributes != null) {
             String tokenString = servletRequestAttributes.getRequest().getHeader("Authorization");
             Optional<Token> token = tokenRepository.findByToken(tokenString.substring(7));
-            System.out.println(tokenString);
             if (token.isPresent()) {
-                for (Token to: tokenRepository.findAll()) System.out.println(to.getName() + " || " + to.getId());
-                tokenRepository.deleteById(token.get().getId());
-                for (Token to: tokenRepository.findAll()) System.out.println(to);
+                tokenRepository.delete(token.get());
                 return DeleteTokenResponse.builder().deleted(true).build();
-            } else System.out.println("TOKEN COULDN'T BE FOUND");
-        } else System.out.println("SERVLET IS NULL!!");
+            }
+        }
         return DeleteTokenResponse.builder().deleted(false).build();
     }
 

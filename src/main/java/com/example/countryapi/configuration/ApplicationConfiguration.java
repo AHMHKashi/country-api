@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Optional;
 
 @Configuration
 @RequiredArgsConstructor
@@ -59,68 +58,5 @@ public class ApplicationConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-   /* @Bean
-    public UserRepository userRepository() {
-        return new UserRepository() {
-            @Override
-            public <S extends UserInfo> S save(S entity) {
-                return null;
-            }
 
-            @Override
-            public <S extends UserInfo> Iterable<S> saveAll(Iterable<S> entities) {
-                return null;
-            }
-
-            @Override
-            public Optional<UserInfo> findById(Integer integer) {
-                return Optional.empty();
-            }
-
-            @Override
-            public boolean existsById(Integer integer) {
-                return false;
-            }
-
-            @Override
-            public Iterable<UserInfo> findAll() {
-                return null;
-            }
-
-            @Override
-            public Iterable<UserInfo> findAllById(Iterable<Integer> integers) {
-                return null;
-            }
-
-            @Override
-            public long count() {
-                return 0;
-            }
-
-            @Override
-            public void deleteById(Integer integer) {
-
-            }
-
-            @Override
-            public void delete(UserInfo entity) {
-
-            }
-
-            @Override
-            public void deleteAllById(Iterable<? extends Integer> integers) {
-
-            }
-
-            @Override
-            public void deleteAll(Iterable<? extends UserInfo> entities) {
-
-            }
-
-            @Override
-            public void deleteAll() {
-
-            }
-        };
-    }*/
 }

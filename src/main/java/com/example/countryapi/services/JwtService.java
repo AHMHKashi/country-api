@@ -33,10 +33,6 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails, new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24));
-    }
-
     public String generateToken(
             UserDetails userDetails,
             Date expireDate

@@ -19,8 +19,7 @@ public class CountryInfoService {
     }
 
     public Optional<Country> getCountryInfoByName(String name) {
-        var country = countryRepository.getCountryByName(name);
-        return country;
+        return countryRepository.getCountryByName(name);
     }
 
     public CountryListDto getCountriesInfoList() {
