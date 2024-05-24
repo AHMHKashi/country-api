@@ -34,24 +34,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String username;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+            response.sendError(401, "Unauthorized");
             return;
         }
         jwt = authHeader.substring(7);
         username = jwtService.extractUsername(jwt);
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserInfo userInfo = this.userInfoDetailService.loadUserByUsername(username);
-            if (!userInfo.getRole().equals(Role.ADMIN) && !userInfo.isActive()) {
-                filterChain.doFilter(request, response);
-            }
-            if (jwtService.isTokenValid(jwt, userInfo)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userInfo, null, userInfo.getAuthorities());
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
+        if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
+            response.sendError(401, "Unauthorized");
+            return;
         }
+
+        UserInfo userInfo = this.userInfoDetailService.loadUserByUsername(username);
+        if (!userInfo.getRole().equals(Role.ADMIN) && !userInfo.isActive()) {
+            response.sendError(403, "User is not active");
+            return;
+        }
+
+        if (!jwtService.isTokenValid(jwt, userInfo)) {
+            response.sendError(401, "Invalid token");
+            return;
+        }
+
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userInfo, null, userInfo.getAuthorities());
+        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
         filterChain.doFilter(request, response);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request)
+    {
+        String path = request.getRequestURI();
+        return path.startsWith("/users/");
     }
 }
