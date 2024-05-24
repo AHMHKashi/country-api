@@ -3,9 +3,7 @@ package com.example.countryapi.controllers;
 
 import com.example.countryapi.models.Token;
 import com.example.countryapi.models.UserInfo;
-import com.example.countryapi.models.dto.DeleteTokenResponse;
-import com.example.countryapi.models.dto.TokenResponseArray;
-import com.example.countryapi.models.dto.TokenResponse;
+import com.example.countryapi.models.dto.*;
 import com.example.countryapi.repository.TokenRepository;
 import com.example.countryapi.repository.UserRepository;
 import com.example.countryapi.services.JwtService;
@@ -34,24 +32,27 @@ public class TokenController {
 
 
     @PostMapping("")
-    public TokenResponse createToken(@RequestParam String name, @RequestParam String expire_date) {
+    public TokenResponse createToken(@RequestBody CreateTokenRequestDto request) {
+        if (request.getName().equals("temp-token")) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "This name is reserved.");
+        }
         UserInfo userInfo = (UserInfo) SecurityContextHolder.getContext().getAuthentication()
                 .getPrincipal();
-        List<Token> searchToken = tokenRepository.findTokensByUserInfoAndName(userInfo.getId(), name);
+        List<Token> searchToken = tokenRepository.findTokensByUserInfoAndName(userInfo.getId(), request.getName());
         if (!searchToken.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "There is already a token with this name");
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "There is already a token with this name.");
         }
         Date date;
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-            date = formatter.parse(expire_date);
+            date = formatter.parse(request.getExpire_date());
         } catch (Exception e) {
             return null;
         }
         String jwtToken = jwtService.generateToken(userInfo, date);
-        Token token = Token.builder().name(name).token(jwtToken).expireDate(date).userInfo(userInfo).build();
+        Token token = Token.builder().name(request.getName()).token(jwtToken).expireDate(date).userInfo(userInfo).build();
         tokenRepository.save(token);
-        return TokenResponse.builder().name(name).token(jwtToken).expireDate(date).build();
+        return TokenResponse.builder().name(request.getName()).token(jwtToken).expireDate(date).build();
     }
 
     @DeleteMapping("")
