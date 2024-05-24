@@ -77,7 +77,7 @@ public class LoginIntegrationTest {
                         .post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(correctReq)))
-                .andExpect(status().isNotAcceptable());
+                .andExpect(status().isForbidden());
     }
 
     @Test

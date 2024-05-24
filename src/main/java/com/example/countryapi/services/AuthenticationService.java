@@ -44,7 +44,7 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(RegisterRequestDto request) {
         Optional<UserInfo> searchUser = repository.findByUsername(request.getUsername());
         if (searchUser.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "There is no user with this username.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "There is no user with this username.");
         }
         try {
             authenticationManager.authenticate(
@@ -54,12 +54,12 @@ public class AuthenticationService {
                     )
             );
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Your password is incorrect.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Your password is incorrect.");
         }
 
         UserInfo user = searchUser.get();
         if (!user.isActive() && !user.getRole().equals(Role.ADMIN)) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "User is not active.");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not active.");
         }
         Date date = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
         var jwtToken = jwtService.generateToken(user, date);
