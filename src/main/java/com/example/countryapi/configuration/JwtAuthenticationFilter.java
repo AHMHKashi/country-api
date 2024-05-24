@@ -42,7 +42,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserInfo userInfo = this.userInfoDetailService.loadUserByUsername(username);
             if (!userInfo.getRole().equals(Role.ADMIN) && !userInfo.isActive()) {
-                System.out.println("it filtered in activeness");
                 filterChain.doFilter(request, response);
             }
             if (jwtService.isTokenValid(jwt, userInfo)) {
