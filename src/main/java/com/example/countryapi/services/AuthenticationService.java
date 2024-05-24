@@ -9,10 +9,12 @@ import com.example.countryapi.models.dto.MessageResponse;
 import com.example.countryapi.repository.TokenRepository;
 import com.example.countryapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 import java.util.List;
@@ -47,6 +49,9 @@ public class AuthenticationService {
         );
         var user = repository.findByUsername(request.getUsername())
                 .orElseThrow();
+        if (!user.isActive() && !user.getRole().equals(Role.ADMIN)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "User is not active.");
+        }
         Date date = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
         var jwtToken = jwtService.generateToken(user, date);
         List<Token> searchToken = tokenRepository.findTokensByUserInfoAndName(user.getId(), "temp-token");
