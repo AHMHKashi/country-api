@@ -21,9 +21,6 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<MessageResponse> registerUser(@RequestBody RegisterRequestDto registerForm) {
-        if (userRepository.findByUsername(registerForm.getUsername()).isPresent()) {
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "There is already a user with this name");
-        }
         UserInfo user = authService.register(registerForm);
         return ResponseEntity.ok(new MessageResponse("User created successfully!"));
     }

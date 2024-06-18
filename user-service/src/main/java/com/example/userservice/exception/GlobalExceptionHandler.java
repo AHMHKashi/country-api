@@ -14,4 +14,5 @@ public class GlobalExceptionHandler {
     {
         return new ResponseEntity<>(ex.getReason(), ex.getStatusCode());
     }
+
 }
