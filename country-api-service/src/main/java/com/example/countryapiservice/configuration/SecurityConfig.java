@@ -25,7 +25,7 @@ public class SecurityConfig {
                         req.dispatcherTypeMatchers(DispatcherType.ERROR)
                                 .permitAll()
                                 .anyRequest()
-                                .authenticated()
+                                .permitAll()
                 )
         ;
         return http.build();
