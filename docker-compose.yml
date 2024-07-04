@@ -1,0 +1,25 @@
+services:
+  mysqldb:
+    image: mysql:8.0
+    restart: always
+    environment:
+      - MYSQL_DATABASE=country_api
+      - MYSQL_ROOT_PASSWORD=password
+    expose:
+      - 3306
+  user-service:
+    build: user-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/country_api
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mysqldb
+  country-api-service:
+    build: country-api-service
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/country_api
+    ports:
+      - '8090:8090'
+    depends_on:
+      - mysqldb
