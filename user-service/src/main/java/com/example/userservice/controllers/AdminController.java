@@ -45,4 +45,9 @@ public class AdminController {
         }
         return (userList);
     }
+
+    @GetMapping("/auth")
+    public MessageResponse getAuth() {
+        return new MessageResponse("You are admin!");
+    }
 }
