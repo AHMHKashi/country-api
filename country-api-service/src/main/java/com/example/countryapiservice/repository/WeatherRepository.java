@@ -1,5 +1,6 @@
 package com.example.countryapiservice.repository;
 
+import com.example.countryapiservice.models.Geocoding;
 import com.example.countryapiservice.models.Weather;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +23,12 @@ public class WeatherRepository {
 
     @Cacheable(value = "weatherInfos", key = "#cityName")
     public Optional<Weather> getWeatherByCityName(String cityName) {
-        var result = ninjasTemplate.getForObject(WeatherAPI + "?city=" + cityName, Weather.class);
+        var coordinatesList = ninjasTemplate.getForObject("https://api.api-ninjas.com/v1/geocoding?city=" + cityName, Geocoding[].class);
+        if(coordinatesList == null || coordinatesList.length == 0) {
+            return Optional.empty();
+        }
+        var coordinates = coordinatesList[0];
+        var result = ninjasTemplate.getForObject(WeatherAPI + "?lat=" + coordinates.getLatitude() + "&lon=" + coordinates.getLongitude(), Weather.class);
         if (result != null) {
             return Optional.of(result);
         }
